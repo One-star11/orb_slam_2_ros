@@ -26,31 +26,29 @@
 #include <fstream>
 #include <chrono>
 
-#include <ros/ros.h>
+#include <rclcpp/rclcpp.hpp>
 #include <message_filters/subscriber.h>
 #include <message_filters/time_synchronizer.h>
 #include <message_filters/sync_policies/approximate_time.h>
-#include <image_transport/image_transport.h>
-#include <cv_bridge/cv_bridge.h>
-#include <sensor_msgs/image_encodings.h>
+#include <image_transport/image_transport.hpp>
+#include <cv_bridge/cv_bridge.hpp>
+#include <sensor_msgs/msg/image.hpp>
 #include <opencv2/core/core.hpp>
-#include <tf/transform_broadcaster.h>
 
 #include "System.h"
 #include "Node.h"
 
-
 class RGBDNode : public Node
 {
   public:
-    RGBDNode (const ORB_SLAM2::System::eSensor sensor, ros::NodeHandle &node_handle, image_transport::ImageTransport &image_transport);
+    RGBDNode (const ORB_SLAM2::System::eSensor sensor, const std::string& node_name);
     ~RGBDNode ();
-    void ImageCallback (const sensor_msgs::ImageConstPtr& msgRGB,const sensor_msgs::ImageConstPtr& msgD);
+    void ImageCallback (const sensor_msgs::msg::Image::ConstSharedPtr& msgRGB, const sensor_msgs::msg::Image::ConstSharedPtr& msgD);
 
   private:
-    typedef message_filters::sync_policies::ApproximateTime<sensor_msgs::Image, sensor_msgs::Image> sync_pol;
-    message_filters::Subscriber<sensor_msgs::Image> *rgb_subscriber_;
-    message_filters::Subscriber<sensor_msgs::Image> *depth_subscriber_;
+    typedef message_filters::sync_policies::ApproximateTime<sensor_msgs::msg::Image, sensor_msgs::msg::Image> sync_pol;
+    message_filters::Subscriber<sensor_msgs::msg::Image> *rgb_subscriber_;
+    message_filters::Subscriber<sensor_msgs::msg::Image> *depth_subscriber_;
     message_filters::Synchronizer<sync_pol> *sync_;
 };
 

@@ -26,23 +26,21 @@
 #include <fstream>
 #include <chrono>
 
-#include <ros/ros.h>
-#include <image_transport/image_transport.h>
-#include <cv_bridge/cv_bridge.h>
-#include <sensor_msgs/image_encodings.h>
+#include <rclcpp/rclcpp.hpp>
+#include <image_transport/image_transport.hpp>
+#include <cv_bridge/cv_bridge.hpp>
+#include <sensor_msgs/msg/image.hpp>
 #include <opencv2/core/core.hpp>
-#include <tf/transform_broadcaster.h>
 
 #include "System.h"
 #include "Node.h"
 
-
 class MonoNode : public Node
 {
   public:
-    MonoNode (const ORB_SLAM2::System::eSensor sensor, ros::NodeHandle &node_handle, image_transport::ImageTransport &image_transport);
+    MonoNode (const ORB_SLAM2::System::eSensor sensor, const std::string& node_name);
     ~MonoNode ();
-    void ImageCallback (const sensor_msgs::ImageConstPtr& msg);
+    void ImageCallback (const sensor_msgs::msg::Image::ConstSharedPtr& msg);
 
   private:
     image_transport::Subscriber image_subscriber;

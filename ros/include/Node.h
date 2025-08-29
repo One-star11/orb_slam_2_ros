@@ -22,46 +22,42 @@
 #define ORBSLAM2_ROS_NODE_H_
 
 #include <vector>
-#include <ros/ros.h>
-#include <ros/time.h>
-#include <image_transport/image_transport.h>
-#include <cv_bridge/cv_bridge.h>
+#include <memory>
+#include <rclcpp/rclcpp.hpp>
+#include <rclcpp/time.hpp>
+#include <image_transport/image_transport.hpp>
+#include <cv_bridge/cv_bridge.hpp>
 #include <opencv2/core/core.hpp>
 
 #include <tf2_ros/transform_broadcaster.h>
 #include <tf2_ros/transform_listener.h>
 #include <tf2_ros/buffer.h>
-#include <tf2_geometry_msgs/tf2_geometry_msgs.h>
+#include <tf2_geometry_msgs/tf2_geometry_msgs.hpp>
 
-#include <dynamic_reconfigure/server.h>
-#include <orb_slam2_ros/dynamic_reconfigureConfig.h>
-
-#include "orb_slam2_ros/SaveMap.h"
+#include <orb_slam2_ros/srv/save_map.hpp>
 
 #include <message_filters/subscriber.h>
 #include <message_filters/time_synchronizer.h>
 #include <message_filters/sync_policies/approximate_time.h>
-#include <sensor_msgs/image_encodings.h>
-#include <sensor_msgs/PointCloud2.h>
-#include <geometry_msgs/PoseStamped.h>
-#include <sensor_msgs/CameraInfo.h>
-#include <std_msgs/Bool.h>
+#include <sensor_msgs/msg/image.hpp>
+#include <sensor_msgs/msg/point_cloud2.hpp>
+#include <geometry_msgs/msg/pose_stamped.hpp>
+#include <sensor_msgs/msg/camera_info.hpp>
+#include <std_msgs/msg/bool.hpp>
 
 #include "System.h"
 
-
-
-class Node
+class Node : public rclcpp::Node
 {
   public:
-    Node (ORB_SLAM2::System::eSensor sensor, ros::NodeHandle &node_handle, image_transport::ImageTransport &image_transport);
+    Node (ORB_SLAM2::System::eSensor sensor, const std::string& node_name);
     ~Node ();
     void Init ();
 
   protected:
     void Update ();
     ORB_SLAM2::System* orb_slam_;
-    ros::Time current_frame_time_;
+    rclcpp::Time current_frame_time_;
 
     std::string camera_info_topic_;
 
@@ -71,31 +67,29 @@ class Node
     void PublishPositionAsPoseStamped(cv::Mat position);
     void PublishGBAStatus (bool gba_status);
     void PublishRenderedImage (cv::Mat image);
-    void ParamsChangedCallback(orb_slam2_ros::dynamic_reconfigureConfig &config, uint32_t level);
-    bool SaveMapSrv (orb_slam2_ros::SaveMap::Request &req, orb_slam2_ros::SaveMap::Response &res);
+    bool SaveMapSrv (const std::shared_ptr<orb_slam2_ros::srv::SaveMap::Request> request,
+                     std::shared_ptr<orb_slam2_ros::srv::SaveMap::Response> response);
     void LoadOrbParameters (ORB_SLAM2::ORBParameters& parameters);
+    void DeclareParameters();
 
     // initialization Transform listener
-    boost::shared_ptr<tf2_ros::Buffer> tfBuffer;
-    boost::shared_ptr<tf2_ros::TransformListener> tfListener;
+    std::unique_ptr<tf2_ros::Buffer> tfBuffer;
+    std::unique_ptr<tf2_ros::TransformListener> tfListener;
 
     tf2::Transform TransformFromMat (cv::Mat position_mat);
     tf2::Transform TransformToTarget (tf2::Transform tf_in, std::string frame_in, std::string frame_target);
-    sensor_msgs::PointCloud2 MapPointsToPointCloud (std::vector<ORB_SLAM2::MapPoint*> map_points);
+    sensor_msgs::msg::PointCloud2 MapPointsToPointCloud (std::vector<ORB_SLAM2::MapPoint*> map_points);
 
-    dynamic_reconfigure::Server<orb_slam2_ros::dynamic_reconfigureConfig> dynamic_param_server_;
-
+    std::unique_ptr<tf2_ros::TransformBroadcaster> tf_broadcaster_;
+    std::shared_ptr<image_transport::ImageTransport> image_transport_;
     image_transport::Publisher rendered_image_publisher_;
-    ros::Publisher map_points_publisher_;
-    ros::Publisher pose_publisher_;
-    ros::Publisher status_gba_publisher_;
+    rclcpp::Publisher<sensor_msgs::msg::PointCloud2>::SharedPtr map_points_publisher_;
+    rclcpp::Publisher<geometry_msgs::msg::PoseStamped>::SharedPtr pose_publisher_;
+    rclcpp::Publisher<std_msgs::msg::Bool>::SharedPtr status_gba_publisher_;
 
-    ros::ServiceServer service_server_;
+    rclcpp::Service<orb_slam2_ros::srv::SaveMap>::SharedPtr service_server_;
 
     std::string name_of_node_;
-    ros::NodeHandle node_handle_;
-    image_transport::ImageTransport image_transport_;
-
     ORB_SLAM2::System::eSensor sensor_;
 
     std::string map_frame_id_param_;
