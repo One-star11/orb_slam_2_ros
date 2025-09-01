@@ -18,6 +18,7 @@ LIST(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/orb_slam2/cmake_modules)
 
 # Find ROS2 packages
 find_package(ament_cmake REQUIRED)
+find_package(rosidl_default_generators REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(rclpy REQUIRED)
 find_package(std_msgs REQUIRED)
@@ -63,7 +64,7 @@ ${PROJECT_SOURCE_DIR}/orb_slam2/lib/lib${PROJECT_NAME}.so
 ${OpenCV_LIBS}
 )
 
-# Add service files
+# Add service files (ROS 2)
 rosidl_generate_interfaces(${PROJECT_NAME}
   "srv/SaveMap.srv"
   DEPENDENCIES std_msgs

@@ -1,0 +1,98 @@
+/**:
+  ros__parameters:
+    # ORB SLAM2 parameters
+    ORBextractor_nfeatures: 2000
+    ORBextractor_scaleFactor: 1.2
+    ORBextractor_nlevels: 8
+    ORBextractor_iniThFAST: 20
+    ORBextractor_minThFAST: 7
+    
+    # Camera parameters
+    Camera_fx: 525.0
+    Camera_fy: 525.0
+    Camera_cx: 319.5
+    Camera_cy: 239.5
+    
+    Camera_k1: 0.0
+    Camera_k2: 0.0
+    Camera_p1: 0.0
+    Camera_p2: 0.0
+    
+    Camera_width: 640
+    Camera_height: 480
+    
+    # Depth map factor
+    DepthMapFactor: 1.0
+    
+    # Viewing parameters
+    Viewer_KeyFrameSize: 0.05
+    Viewer_KeyFrameLineWidth: 1.0
+    Viewer_GraphLineWidth: 0.9
+    Viewer_PointSize: 2.0
+    Viewer_CameraSize: 0.08
+    Viewer_CameraLineWidth: 3.0
+    Viewer_ViewpointX: 0.0
+    Viewer_ViewpointY: -0.7
+    Viewer_ViewpointZ: -1.8
+    Viewer_ViewpointF: 500.0
+    Viewer_ImageWidth: 1220.0
+    Viewer_ImageHeight: 440.0
+    
+    # System parameters
+    System_LoadImages: false
+    System_LoadMap: false
+    System_SaveMap: false
+    System_MapFile: "map.bin"
+    System_VocFile: "ORBvoc.txt"
+    
+    # Tracking parameters
+    Tracking_ThDepth: 40.0
+    Tracking_ThDepthMap: 0.01
+    Tracking_ThParallax: 1.0
+    Tracking_ThFAR: 0.7
+    Tracking_ThORBdist: 100.0
+    Tracking_ThORBdist2: 50.0
+    Tracking_ThORBdist3: 30.0
+    Tracking_ThORBdist4: 20.0
+    Tracking_ThORBdist5: 10.0
+    Tracking_ThORBdist6: 5.0
+    Tracking_ThORBdist7: 2.0
+    Tracking_ThORBdist8: 1.0
+    Tracking_ThORBdist9: 0.5
+    Tracking_ThORBdist10: 0.25
+    
+    # Local Mapping parameters
+    LocalMapping_ThLocalMap: 0.75
+    LocalMapping_ThLocalMap2: 0.5
+    LocalMapping_ThLocalMap3: 0.25
+    LocalMapping_ThLocalMap4: 0.1
+    LocalMapping_ThLocalMap5: 0.05
+    LocalMapping_ThLocalMap6: 0.025
+    LocalMapping_ThLocalMap7: 0.0125
+    LocalMapping_ThLocalMap8: 0.00625
+    LocalMapping_ThLocalMap9: 0.003125
+    LocalMapping_ThLocalMap10: 0.0015625
+    
+    # Loop Closing parameters
+    LoopClosing_ThLoop: 0.75
+    LoopClosing_ThLoop2: 0.5
+    LoopClosing_ThLoop3: 0.25
+    LoopClosing_ThLoop4: 0.1
+    LoopClosing_ThLoop5: 0.05
+    LoopClosing_ThLoop6: 0.025
+    LoopClosing_ThLoop7: 0.0125
+    LoopClosing_ThLoop8: 0.00625
+    LoopClosing_ThLoop9: 0.003125
+    LoopClosing_ThLoop10: 0.0015625
+    
+    # Node parameters
+    publish_pointcloud: true
+    publish_pose: true
+    publish_tf: true
+    pointcloud_frame_id: "map"
+    camera_frame_id: "camera_link"
+    target_frame_id: "base_link"
+    map_file: "map.bin"
+    voc_file: "file_not_set"
+    load_map: false
+    min_num_kf_in_map: 5
